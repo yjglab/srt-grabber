@@ -1,0 +1,21 @@
+{
+  "name": "srt-grabber",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "go": "ts-node src/app.ts",
+    "build": "tsc --build",
+    "clean": "tsc --build --clean"
+  },
+  "author": "yjglab",
+  "license": "MIT",
+  "dependencies": {
+    "@types/puppeteer": "^7.0.4",
+    "puppeteer": "^21.1.1",
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.1"
+  }
+}
