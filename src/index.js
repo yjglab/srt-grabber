@@ -1,5 +1,7 @@
+import puppeteer from "puppeteer";
 function app() {
-  const puppeteer = require("puppeteer");
+  console.log("시작");
+  // const puppeteer = require("puppeteer");
   const [maxTime, minTime] = [13, 8];
   let intervalTime = 0;
 
@@ -10,7 +12,7 @@ function app() {
       );
       const browser = await puppeteer.launch({
         headless: false,
-        args: ["--start-maximized"],
+        args: ["--start-maximized", "--disable-web-security"],
       });
       setTimeout(async () => {
         await browser.close();
@@ -35,7 +37,7 @@ function app() {
         number: "2",
       };
       // Alert accept always
-      page.on("dialog", async (dialog: any) => {
+      page.on("dialog", async (dialog) => {
         await dialog.accept();
       });
       // 출발
@@ -118,3 +120,5 @@ if (typeof document !== "undefined") {
   const button = document.querySelector("#launch");
   button?.addEventListener("click", app);
 }
+
+app();
