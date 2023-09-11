@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer";
+import { puppeteer } from "../node_modules/puppeteer/lib/cjs/puppeteer";
 function app() {
   console.log("시작");
   // const puppeteer = require("puppeteer");
