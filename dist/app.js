@@ -9,7 +9,6 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 function app() {
-    console.log("ff");
     const puppeteer = require("puppeteer");
     const [maxTime, minTime] = [13, 8];
     let intervalTime = 0;
