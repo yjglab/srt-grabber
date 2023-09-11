@@ -1,7 +1,43 @@
-import { puppeteer } from "../node_modules/puppeteer/lib/cjs/puppeteer";
-function app() {
-  console.log("시작");
-  // const puppeteer = require("puppeteer");
+"use strict";
+
+const { BrowserWindow, app } = require("electron");
+const pie = require("puppeteer-in-electron");
+const puppeteer = require("puppeteer-core");
+
+let mainWindow = null;
+app.on("window-all-closed", () => {
+  if (process.platform !== "darwin") app.quit();
+});
+
+app.on("ready", () => {
+  mainWindow = new BrowserWindow();
+  mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.on("closed", () => {
+    mainWindow = null;
+  });
+  mainWindow.webContents.on("did-finish-load", () => {
+    let code = `
+        const launchButton = document.querySelector("#launch");
+        launchButton.addEventListener("click",function(){alert("clicked!");});
+    `;
+    mainWindow.webContents.executeJavaScript(code);
+  });
+});
+
+const route = {
+  departure: "동탄",
+  destination: "전주",
+  date: "20231008",
+  number: "2",
+};
+const userInfo = {
+  name: "김기차",
+  phone: ["010", "0000", "0000"],
+  password: "12345",
+  passwordConfirm: "12345",
+};
+const main = async () => {
+  await pie.initialize(app);
   const [maxTime, minTime] = [13, 8];
   let intervalTime = 0;
 
@@ -10,17 +46,18 @@ function app() {
       intervalTime = Math.floor(
         Math.random() * (maxTime - minTime + 1) + minTime
       );
-      const browser = await puppeteer.launch({
-        headless: false,
-        args: ["--start-maximized", "--disable-web-security"],
-      });
-      setTimeout(async () => {
-        await browser.close();
-      }, intervalTime * 1000 + 1000);
+      const browser = await pie.connect(app, puppeteer);
 
-      const page = await browser.newPage();
+      const window = new BrowserWindow();
       const targetUrl =
         "https://etk.srail.kr/hpg/hra/01/selectScheduleList.do?pageId=TK0101010000";
+      await window.loadURL(targetUrl);
+
+      const page = await pie.getPage(browser, window);
+      setTimeout(async () => {
+        window.destroy();
+      }, intervalTime * 1000 + 1000);
+
       await page.setViewport({
         width: 0,
         height: 0,
@@ -30,14 +67,8 @@ function app() {
         timeout: 0,
       });
 
-      const route = {
-        departure: "동탄",
-        destination: "전주",
-        date: "20230927",
-        number: "2",
-      };
       // Alert accept always
-      page.on("dialog", async (dialog) => {
+      await page.on("dialog", async (dialog) => {
         await dialog.accept();
       });
       // 출발
@@ -71,13 +102,6 @@ function app() {
       await page.waitForNavigation();
 
       // 예약하기: 정보 입력
-      const userInfo = {
-        name: "최석범",
-        phone: ["010", "3353", "0217"],
-        password: "12345",
-        passwordConfirm: "12345",
-      };
-
       await page.mouse.wheel({ deltaY: 5000 });
       await page.waitForTimeout(1000);
 
@@ -114,11 +138,6 @@ function app() {
   setInterval(() => {
     launch();
   }, intervalTime * 1000);
-}
+};
 
-if (typeof document !== "undefined") {
-  const button = document.querySelector("#launch");
-  button?.addEventListener("click", app);
-}
-
-app();
+// main();

@@ -2,19 +2,22 @@
   "name": "srt-grabber",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "./src/main.js",
   "scripts": {
     "go": "node src/index.js",
     "build": "tsc -p tsconfig.json",
     "clean": "tsc --build --clean"
   },
-  "type": "module",
+  "type": "commonjs",
   "author": "yjglab",
   "license": "MIT",
   "dependencies": {
     "@types/puppeteer": "^7.0.4",
+    "electron": "^26.2.0",
     "nodemailer": "^6.9.5",
     "puppeteer": "^21.1.1",
+    "puppeteer-core": "^21.1.1",
+    "puppeteer-in-electron": "^3.0.5",
     "typescript": "^5.2.2"
   },
   "devDependencies": {
