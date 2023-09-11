@@ -11,6 +11,10 @@ async function app() {
       headless: false,
       args: ["--start-maximized"],
     });
+    setTimeout(async () => {
+      await browser.close();
+    }, intervalTime * 1000 + 1000);
+
     const page = await browser.newPage();
     const targetUrl =
       "https://etk.srail.kr/hpg/hra/01/selectScheduleList.do?pageId=TK0101010000";
@@ -26,7 +30,7 @@ async function app() {
     const route = {
       departure: "동탄",
       destination: "전주",
-      date: "20231008",
+      date: "20230927",
       number: "2",
     };
     // Alert accept always
@@ -66,7 +70,7 @@ async function app() {
     // 예약하기: 정보 입력
     const userInfo = {
       name: "최석범",
-      phone: ["010", "6415", "0898"],
+      phone: ["010", "3353", "0217"],
       password: "12345",
       passwordConfirm: "12345",
     };
@@ -98,9 +102,6 @@ async function app() {
     await page.click("#agreeY");
     // await page.click("input[value='확인']"); // 예약 완료 버튼
     console.log("완료");
-    setTimeout(async () => {
-      await browser.close();
-    }, 8000);
   } catch (error) {
     console.error(error);
   }

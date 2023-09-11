@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "go": "ts-node src/app.ts",
-    "build": "tsc --build",
+    "build": "tsc -p tsconfig.json",
     "clean": "tsc --build --clean"
   },
+  "type": "commonjs",
   "author": "yjglab",
   "license": "MIT",
   "dependencies": {
