@@ -114,5 +114,7 @@ function app() {
   }, intervalTime * 1000);
 }
 
-const button = document.querySelector("#launch");
-button?.addEventListener("click", app);
+if (typeof document !== "undefined") {
+  const button = document.querySelector("#launch");
+  button?.addEventListener("click", app);
+}
