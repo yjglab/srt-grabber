@@ -12,8 +12,8 @@
     "deploy:win64": "electron-builder --win nsis:x64"
   },
   "build": {
-    "productName": "Start Electron",
-    "appId": "net.jetalab.ex.startelectron",
+    "productName": "SRT Grabber",
+    "appId": "srtgrabber.app.id",
     "asar": true,
     "mac": {
       "target": [
@@ -21,7 +21,7 @@
       ]
     },
     "dmg": {
-      "title": "Start Electron"
+      "title": "SRT Grabber"
     },
     "win": {
       "target": [
