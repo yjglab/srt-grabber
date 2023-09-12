@@ -1,10 +1,35 @@
 "use strict";
 
+const nodeMailer = require("nodemailer");
+const { route, userInfo } = require("./data");
 const { BrowserWindow, app } = require("electron");
 const pie = require("puppeteer-in-electron");
 const puppeteer = require("puppeteer-core");
 
+const { MAIL_ADDRESS, MAIL_APP_PASSWORD } = require("../env");
+
+const transporter = nodeMailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: MAIL_ADDRESS,
+    pass: MAIL_APP_PASSWORD,
+  },
+});
+const mailOptions = {
+  from: MAIL_ADDRESS,
+  to: userInfo.email,
+  subject: "[SRT Grabber] 예약 완료",
+  html: `
+        <h4>${userInfo.name}님, ${route.date} ${route.departure} -> ${route.destination} SRT 예약 완료. 10분 내 결제 필요.</h4>
+        <h4>예약 비밀번호: ${userInfo.password}</h4>
+        <br/><br/>
+        <span>from. SRT Grabber</span>
+        `,
+};
+
 let mainWindow = null;
+let succeed = false;
+
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
@@ -16,26 +41,11 @@ app.on("ready", () => {
     mainWindow = null;
   });
   mainWindow.webContents.on("did-finish-load", () => {
-    let code = `
-        const launchButton = document.querySelector("#launch");
-        launchButton.addEventListener("click",function(){alert("clicked!");});
-    `;
+    let code = ``;
     mainWindow.webContents.executeJavaScript(code);
   });
 });
 
-const route = {
-  departure: "동탄",
-  destination: "전주",
-  date: "20231008",
-  number: "2",
-};
-const userInfo = {
-  name: "김기차",
-  phone: ["010", "0000", "0000"],
-  password: "12345",
-  passwordConfirm: "12345",
-};
 const main = async () => {
   await pie.initialize(app);
   const [maxTime, minTime] = [13, 8];
@@ -54,7 +64,11 @@ const main = async () => {
       await window.loadURL(targetUrl);
 
       const page = await pie.getPage(browser, window);
-      setTimeout(async () => {
+      const destroyTimeout = setTimeout(async () => {
+        if (succeed) {
+          clearTimeout(destroyTimeout);
+          return;
+        }
         window.destroy();
       }, intervalTime * 1000 + 1000);
 
@@ -127,17 +141,23 @@ const main = async () => {
       await passwordConfirmInput.type(userInfo.passwordConfirm);
 
       await page.click("#agreeY");
-      // await page.click("input[value='확인']"); // 예약 완료 버튼
-      console.log("완료");
+      await page.click("input[value='확인']"); // 예약 완료 버튼
+      await transporter.sendMail(mailOptions);
+
+      console.log("예약 완료");
+      succeed = true;
     } catch (error) {
       console.error(error);
     }
   }
 
   launch();
-  setInterval(() => {
+  const launchInterval = setInterval(() => {
+    if (succeed) {
+      clearInterval(launchInterval);
+      return;
+    }
     launch();
   }, intervalTime * 1000);
 };
-
-// main();
+main();

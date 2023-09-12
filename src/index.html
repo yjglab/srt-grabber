@@ -4,9 +4,58 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SRT Grabber</title>
+    <link href="./reset.css" rel="stylesheet" />
+    <link href="./index.css" rel="stylesheet" />
   </head>
+
   <body>
-    <h1>SRT Grabber</h1>
-    <button id="launch">시작하기</button>
+    <header>
+      <h1>SRT Grabber</h1>
+      <span>자동 예약</span>
+    </header>
+    <main>
+      <!-- <form>
+        <div class="row">
+          <label for="username">이름</label>
+          <input id="username" type="text" value="" />
+        </div>
+        <div class="row">
+          <label for="humans">인원</label>
+          <input id="humans" type="number" placeholder="2" min="0" />
+        </div>
+        <div class="row">
+          <label for="date">날짜</label>
+          <input id="date" type="text" placeholder="20230927 형식으로 입력" />
+        </div>
+        <div class="row">
+          <label for="password">예약 비밀번호</label>
+          <input
+            id="password"
+            type="number"
+            placeholder="숫자5자리 입력"
+            min="0"
+          />
+        </div>
+        <div class="row">
+          <label for="email">알림받을 이메일</label>
+          <input id="email" type="email" placeholder="abc@gmail.com" />
+        </div>
+      </form> -->
+
+      <div class="counter">
+        <!-- <span id="count">5</span><span>초 후 그래버가 실행됩니다</span> -->
+        <span>그래버를 실행합니다</span>
+        <!-- <button id="stopButton">실행 중지</button> -->
+      </div>
+    </main>
+    <script>
+      // const count = document.querySelector("#count");
+      // let i = 5;
+      // const counter = setInterval(() => {
+      //   i -= 1;
+      //   count.textContent = i;
+      //   if (i == 0) clearInterval(counter);
+      // }, 1000);
+    </script>
   </body>
 </html>

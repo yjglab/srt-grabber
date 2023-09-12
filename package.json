@@ -5,22 +5,59 @@
   "main": "./src/main.js",
   "scripts": {
     "go": "node src/index.js",
-    "build": "tsc -p tsconfig.json",
-    "clean": "tsc --build --clean"
+    "start": "electron .",
+    "deploy:osx": "electron-builder --mac",
+    "deploy:win": "npm run deploy:win32 && npm run deploy:win64",
+    "deploy:win32": "electron-builder --win nsis:ia32",
+    "deploy:win64": "electron-builder --win nsis:x64"
+  },
+  "build": {
+    "productName": "Start Electron",
+    "appId": "net.jetalab.ex.startelectron",
+    "asar": true,
+    "mac": {
+      "target": [
+        "default"
+      ]
+    },
+    "dmg": {
+      "title": "Start Electron"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true
+    },
+    "directories": {
+      "buildResources": "./resources/installer/",
+      "output": "./dist/",
+      "app": "."
+    }
   },
   "type": "commonjs",
   "author": "yjglab",
   "license": "MIT",
   "dependencies": {
-    "@types/puppeteer": "^7.0.4",
-    "electron": "^26.2.0",
+    "dotenv": "^16.3.1",
+    "electron-updater": "^6.1.4",
     "nodemailer": "^6.9.5",
     "puppeteer": "^21.1.1",
     "puppeteer-core": "^21.1.1",
-    "puppeteer-in-electron": "^3.0.5",
-    "typescript": "^5.2.2"
+    "puppeteer-in-electron": "^3.0.5"
   },
   "devDependencies": {
-    "ts-node": "^10.9.1"
+    "electron": "^26.2.0",
+    "electron-builder": "^24.6.4"
   }
 }
